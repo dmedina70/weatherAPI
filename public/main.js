@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const searchButton = document.getElementById("search_button");
 const cityInput = document.getElementById("cityInput");
 const stateInput = document.getElementById("stateInput");
@@ -82,7 +81,7 @@ function renderForecast(data) {
     function changeTemp(tempSlider){
   temp = document.getElementsByClassName("temperature")
   console.log(temp[0])
-    if (tempSlider.cheked) {
+    if (tempSlider.checked) {
     // Code to run if the checkbox is checked
     console.log('Checkbox is now checked.');
     // Example: Show a div or enable a button
@@ -95,9 +94,9 @@ function renderForecast(data) {
   
     const tempSlider = document.getElementById("tempSlider")
 
-    tempSlider.addEventListener('change', ()=> {
-      changeTemp(tempSlider)
-    }))
+ tempSlider.addEventListener('change', () => {
+  changeTemp(tempSlider)
+})
 
 
 }
@@ -164,69 +163,3 @@ searchButton.addEventListener("click", getWeather);
 });
 
 renderEmptyState();
-=======
-const search_button = document.getElementById("search_button");
-
-async function getWeather() {
-  const city = document.getElementById("cityInput").value.trim();
-  const status = document.getElementById("status");
-  const result = document.getElementById("result");
-  const state = document.getElementById("stateInput").value.trim();
-
-  result.innerHTML = '';
-
-  if (!city) {
-    status.innerHTML = '<p class="error">Please enter a city name</p>';
-    return;
-  }
-
-  if (!state) {
-    status.innerHTML = '<p class="error">Please enter a state name</p>';
-    return;
-  }
-
-
-  status.innerHTML = '<p class="loading">Loading...</p>';
-
-  try {
-    const response = await fetch(`/search?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      status.innerHTML = `<p class="error">${data.error || 'Something went wrong'}</p>`;
-      return;
-    }
-
-    status.innerHTML = '';
-
-    const cityName = data.city.name;
-    const country = data.city.country;
-    const forecastList = data.list.slice(0, 5);
-
-    let html = `
-      <div class="weather-card">
-        <h2>${cityName}, ${country}</h2>
-    `;
-
-    forecastList.forEach(item => {
-      html += `
-        <div class="forecast-item">
-          <strong>${item.dt_txt}</strong><br>
-          Temperature: ${item.main.temp} °C<br>
-          Feels like: ${item.main.feels_like} °C<br>
-          Weather: ${item.weather[0].description}
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-    result.innerHTML = html;
-
-  } catch (error) {
-    console.error(error);
-    status.innerHTML = '<p class="error">Failed to fetch weather data</p>';
-  }
-}
-
-search_button.addEventListener("click", getWeather);
->>>>>>> 7281706ca38d4c1bdb3400fe337d74a3b5a4f0d0
