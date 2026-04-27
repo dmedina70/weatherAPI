@@ -44,7 +44,7 @@ function renderForecast(data) {
       return `
         <article class="forecast-item">
           <div class="forecast-time">${formatDateTime(item.dt_txt)}</div>
-          <p class="temperature">${Math.round(item.main.temp)}°C</p>
+          <p class="temperature" data-celsius="${Math.round(item.main.temp)}">${Math.round(item.main.temp)}°C</p>
           <p class="forecast-description">${item.weather[0].description}</p>
           <div class="forecast-meta">
             <span><strong>Feels like</strong><span>${Math.round(item.main.feels_like)}°C</span></span>
@@ -56,8 +56,6 @@ function renderForecast(data) {
     })
     .join("");
 
-
-     
   resultBox.innerHTML = `
     <section class="weather-card">
       <div class="weather-header">
@@ -67,38 +65,35 @@ function renderForecast(data) {
         </div>
         <p class="forecast-subtitle">Showing the next 5 forecast points</p>
         <label class="switch">
-          <input id='tempSlider' type="checkbox">
+          <input id="tempSlider" type="checkbox">
           <span class="slider round"></span>
-      </label>
+        </label>
       </div>
-
       <div class="forecast-grid">
         ${forecastCards}
       </div>
     </section>
   `;
 
-    function changeTemp(tempSlider){
-  temp = document.getElementsByClassName("temperature")
-  console.log(temp[0])
-    if (tempSlider.checked) {
-    // Code to run if the checkbox is checked
-    console.log('Checkbox is now checked.');
-    // Example: Show a div or enable a button
-  } else {
-    // Code to run if the checkbox is unchecked
-    console.log('Checkbox is now unchecked.');
-    // Example: Hide a div or disable a button
+  function changeTemp(tempSlider) {
+    const temps = document.getElementsByClassName("temperature");
+
+    Array.from(temps).forEach(el => {
+      const celsius = parseFloat(el.getAttribute("data-celsius"));
+      if (tempSlider.checked) {
+        // C to F
+        el.textContent = `${Math.round((celsius * 9 / 5) + 32)}°F`;
+      } else {
+        // Back to C
+        el.textContent = `${celsius}°C`;
+      }
+    });
   }
-}
-  
-    const tempSlider = document.getElementById("tempSlider")
 
- tempSlider.addEventListener('change', () => {
-  changeTemp(tempSlider)
-})
-
-
+  const tempSlider = document.getElementById("tempSlider");
+  tempSlider.addEventListener("change", () => {
+    changeTemp(tempSlider);
+  });
 }
 
 async function getWeather() {
@@ -149,10 +144,7 @@ async function getWeather() {
   }
 }
 
-
-
 searchButton.addEventListener("click", getWeather);
-
 
 [cityInput, stateInput].forEach((input) => {
   input.addEventListener("keydown", (event) => {
